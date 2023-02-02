@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "lastfmcrawler"
+version = "0.1.0"
+description = "scrape data from weezer and print to sheets"
+authors = ["Rivers Cuomo <riverscuomo@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

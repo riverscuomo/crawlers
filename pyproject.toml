@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "crawlers"
+version = "0.1.0"
+description = "scripts for scraping"
+authors = ["Rivers Cuomo <riverscuomo@users.noreply.github.com>"]
+readme = "README.md"
+packages = [
+    { include = "lastfmcrawler"},
+    { include = "spotifycrawler" },
+    { include = "core" },
+]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+rivertils = "^0.1.8"
+rich = "^12.6.0"
+selenium = "^4.8.0"
+gspread = "^5.7.2"
+gspreader = "^0.1.21"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
