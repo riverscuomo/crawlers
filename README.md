@@ -20,6 +20,7 @@ You'll need a spotify artists account and the artist_id for that account:
 ```
 SPOTIFY_EMAIL=(for a spotify artist account)
 SPOTIFY_PASSWORD=(for a spotify artist account)
+SPOTIFY_ARTIST_ID=
 ```
 
 ####  LASTFM
