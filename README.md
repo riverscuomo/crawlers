@@ -11,13 +11,16 @@ From there I make setlists for Weezer shows.
 
 ## Installation
 
-### Depending on which functions you want to run, you will need the following environment variables:
+Depending on which functions you want to run, you will need the following environment variables:
 
 ####  spotifycrawler
+You'll need a spotify artists account and the artist_id for that account:
+![image](https://user-images.githubusercontent.com/24362267/216662746-ba39b0bb-4cdf-48ab-8318-0c8f3424d8c1.png)
+
 ```
 SPOTIFY_EMAIL=(for a spotify artist account)
 SPOTIFY_PASSWORD=(for a spotify artist account)
-SPOTIFY_ARTIST_ID=3jOstUTkEu2JkjvRdBA5Gu
+SPOTIFY_ARTIST_ID=
 ```
 
 ####  LASTFM

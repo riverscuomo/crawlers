@@ -54,6 +54,7 @@ def consolidate_album_data(sheet_data, new_data):
 
 def consolidate_alt_versions(data, new_data, col_header):
     """
+    For example "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
     BUT I DON'T HAVE ROWS FOR THE ALT VERSION ANYMORE!!?
     streams_last_28_days
     """
