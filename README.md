@@ -1,7 +1,7 @@
 # Crawlers [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
 
 An experimental project to combine 2 or more poetry packages into a single repo.
-These are scrapers and crawlers for various music streaming services. they use python selenium.
+These are scrapers for various music streaming services. they use python selenium.
 I doubt this repo will be of any use to anyone else, but feel free to chime in.
 `spotifycrawler` and `lastmcrawler` draw on common code in `core`.
 They scrape data from spotify and lastfm respectively, and then use `gspread` to import the data into google sheets.
@@ -17,6 +17,7 @@ From there I make setlists for Weezer shows.
 ```
 SPOTIFY_EMAIL=(for a spotify artist account)
 SPOTIFY_PASSWORD=(for a spotify artist account)
+SPOTIFY_ARTIST_ID=3jOstUTkEu2JkjvRdBA5Gu
 ```
 
 ####  LASTFM
