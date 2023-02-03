@@ -38,10 +38,10 @@ logging.basicConfig(level=logging.INFO)
 
 pages = [
     "https://www.last.fm/music/Weezer/+tracks?date_preset=ALL",
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_7_DAYS",
+#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_7_DAYS",
     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_30_DAYS",
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_90_DAYS",
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_180_DAYS",
+#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_90_DAYS",
+#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_180_DAYS",
     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_365_DAYS",
 
 ]
