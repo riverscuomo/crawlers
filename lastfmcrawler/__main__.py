@@ -1,4 +1,4 @@
-
+import sys
 import logging
 
 from gspreader.gspreader import get_sheet, update_range
@@ -12,7 +12,7 @@ import sys
 # import time
 from rich import print
 from rivertils import *
-import core.scripts as scripts 
+import core.scripts.my_args as my_args 
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -29,7 +29,7 @@ description = """
 if "maintenance.py" in sys.argv:
     sys.argv=['lastfmcrawler.py']
 
-args = scripts.my_args.get_args(description)
+args = my_args.get_args(description)
 
 method = args.method
 
