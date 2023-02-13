@@ -11,6 +11,7 @@ from selenium.webdriver.support import expected_conditions as EC
 # import time
 from rich import print
 from rivertils import *
+import core.__main__ as core
 import core.scripts.my_args as my_args 
 from dotenv import load_dotenv
 load_dotenv()
