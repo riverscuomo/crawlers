@@ -12,7 +12,7 @@ import sys
 # import time
 from rich import print
 from rivertils import *
-import core.__main__ as core
+import core.scripts as scripts 
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -29,7 +29,7 @@ description = """
 if "maintenance.py" in sys.argv:
     sys.argv=['lastfmcrawler.py']
 
-args = core.get_args(description)
+args = scripts.my_args.get_args(description)
 
 method = args.method
 

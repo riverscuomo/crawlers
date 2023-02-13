@@ -1,7 +1,7 @@
 from gspreader.gspreader import get_sheet, update_range
 from spotifycrawler.scripts import scripts
 from core import __main__ as core
-from core.my_args import args
+from core.scripts.my_args import args
 
 def update_albums(driver):
     """UPDATE THE ALBUM STREAMS COLUMN IN THE setlist SHEET"""

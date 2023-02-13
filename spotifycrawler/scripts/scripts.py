@@ -8,7 +8,7 @@ import os
 # import core
 from core import __main__ as core
 import core.classes.classes as classes
-from core.my_args import args
+from core.scripts.my_args import args
 
 
 spotify_artist_id = os.getenv("SPOTIFY_ARTIST_ID")

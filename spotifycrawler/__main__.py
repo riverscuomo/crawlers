@@ -6,7 +6,7 @@ import os
 import core.__main__ as core
 from spotifycrawler.scripts import scripts
 from spotifycrawler.scripts import routines
-from core.my_args import args
+from core.scripts.my_args import args
 
 print("\nspotifycrawler.py")
 
