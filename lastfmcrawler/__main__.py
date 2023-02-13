@@ -6,7 +6,6 @@ from gspreader.gspreader import get_sheet, update_range
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import sys
 # import datetime
 # import os
 # import time
