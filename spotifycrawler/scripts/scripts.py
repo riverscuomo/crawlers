@@ -365,7 +365,7 @@ def scrape_country_data(driver, countries_of_interest, fromsongs=1, tosongs=75, 
         # table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]'
         table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]/td[2]/div'
 
-        core.wait_for_element(driver, By.XPATH, table_row_for_this_songx)
+        core.wait_for_element(driver, table_row_for_this_songx)
         elem = driver.find_element(by=By.XPATH, value=table_row_for_this_songx)
         song_title = elem.text
         # song_title = text.split("\n")[1]
@@ -378,7 +378,7 @@ def scrape_country_data(driver, countries_of_interest, fromsongs=1, tosongs=75, 
         elem.click()
 
         country_tablex = '//*[@id="where-they-listen"]/div[2]/div/div/table/tbody'
-        core.wait_for_element(driver, By.XPATH, country_tablex)
+        core.wait_for_element(driver, country_tablex)
         elem = driver.find_element(by=By.XPATH, value=country_tablex)
 
         row = parse_country_string(elem.text, countries_of_interest)

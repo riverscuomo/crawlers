@@ -7,6 +7,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+def log(item: dict):
+    print(f" - {item['name']} {item['xpath']}")
 
 def get_driver():
     options = webdriver.ChromeOptions()
@@ -43,15 +45,20 @@ def update_sheet_data(sheet_data: list, new_data: list, key: str):
     return sheet_data
 
 
-def wait_for_element(driver, by, value):
-    timeout = 20
+def wait_and_click(driver, item, timeout=20):
+    log(item)
+    WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located((By.XPATH, item["xpath"]))
+    ).click()
+
+def wait_for_element(driver, value, by=By.XPATH, timeout=20):
     # THIS was timing out so I'm wrapping it in try
     try:
         WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located((By.XPATH, value))
+            EC.presence_of_element_located((by, value))
         )
     except Exception:
-        print(f"Waited for {timeout} but couldn't find xPath '{value}' in page")
+        print(f"Waited for {timeout} but couldn't find '{value }' by {by} in page")
 
 
 countries_of_interest = [

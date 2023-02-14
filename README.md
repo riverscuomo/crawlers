@@ -31,6 +31,12 @@ LAST_FM_API_SECRET =
 LAST_FM_PASSWORD = 
 ```
 
+####  WME
+```
+WME_USER = 
+WME_PASSWORD = 
+```
+
 ####  GSPREADER For importing and setting data from/to Google Sheets
 ```
 GSPREADER_GOOGLE_CLIENT_EMAIL=client_email_from_your_creds.json
