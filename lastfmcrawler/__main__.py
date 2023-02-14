@@ -1,4 +1,4 @@
-
+import sys
 import logging
 
 from gspreader.gspreader import get_sheet, update_range
@@ -6,13 +6,13 @@ from gspreader.gspreader import get_sheet, update_range
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import sys
 # import datetime
 # import os
 # import time
 from rich import print
 from rivertils import *
-import core.scripts as scripts 
+import core.__main__ as core
+import core.scripts.my_args as my_args 
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -29,7 +29,7 @@ description = """
 if "maintenance.py" in sys.argv:
     sys.argv=['lastfmcrawler.py']
 
-args = scripts.my_args.get_args(description)
+args = my_args.get_args(description)
 
 method = args.method
 
