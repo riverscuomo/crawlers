@@ -300,15 +300,8 @@ def scrape_page(driver, data, date_range: str,fromsongs=1, tosongs=200):
         table_rowx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]'
 
         # THIS was timing out so I'm wrapping it in try
-        try:
-            WebDriverWait(driver, 240).until(
-                EC.presence_of_element_located((By.XPATH, table_rowx))
-            )
-        except Exception:
-            print("can't wait for page to load")
-            continue
+        core.wait_for_element(driver, table_rowx, timeout=100)
 
-        # elem = driver.find_element_by_xpath(table_rowx)
         elem = driver.find_element(by=By.XPATH, value=table_rowx)
         text = elem.text
         elems = text.split("\n")
@@ -412,13 +405,7 @@ def scrape_time_filter(
         table_rowx = f"/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{b}]"
 
         # THIS was timing out so I'm wrapping it in try
-        try:
-            WebDriverWait(driver, 240).until(
-                EC.presence_of_element_located((By.XPATH, table_rowx))
-            )
-        except Exception:
-            print("can't wait for page to load")
-            continue
+        core.wait_for_element(driver, table_rowx, timeout=40)
 
         elem = driver.find_element(by=By.XPATH, value=table_rowx)
         text = elem.text
@@ -427,18 +414,19 @@ def scrape_time_filter(
         title = elems[1]
         subelems = elems[2].split(" ")
         streams = subelems[0]
+
+        row = {"song_title": title}
+        
         if time_filter == 'last28days':
             column = "streams_last_28_days"
+            row["saves_last_28_days"] = subelems[4]
         elif time_filter == "all":
             column = "streams"
         elif time_filter == "last5years":
             column = "streams_since_2015"
-        row = {
-            "song_title": title,
-            column: streams,
-            # "track_id": "",
-            # "date": datetime.datetime.now().strftime("%Y-%m-%d"),
-        }
+        row[column] = streams
+        
+
         print(f"b: {b} {row}")
         # print(")
 
@@ -457,7 +445,7 @@ def scrape_time_filter(
 
 def custom_update(sheet_data: list, new_data: list, matching_field: str):
     """ update the sheet_data with the new_data (if there's a matching row in the new data)"""
-    print(f"custom_update...")
+    print(f"custom_update on {matching_field}")
     for row in sheet_data:
         for new_row in new_data:
             if core.sanitize(str(row[matching_field])) == core.sanitize(str(new_row[matching_field])):
@@ -481,7 +469,7 @@ def fetch_new_datas(driver):
         since_2015_data = scrape_time_filter(driver, "last5years")
         datas.append(since_2015_data)        
     if args.method in ["all", "time", "time28"]:
-        last_28_days_data = scrape_time_filter(driver, "last28days", args.limit)
+        last_28_days_data = scrape_time_filter(driver, "last28days", fromsongs=1)
         datas.append(last_28_days_data)
     return datas
             
