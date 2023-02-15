@@ -20,7 +20,7 @@ print("\nlastfmcrawler.py")
 
 # sheet = get_sheet("")
 description = """
-    1. updates the 'all' sheet in the 'Weezer Data' spreadsheet  
+    1. currently only updates the 'all' sheet in the 'Weezer Data' spreadsheet  
     with latest data from lastfm./weezer
 
     Currently matches with song_title in the sheet
@@ -29,11 +29,9 @@ description = """
 if "maintenance.py" in sys.argv:
     sys.argv=['lastfmcrawler.py']
 
-args = my_args.get_args(description)
+# args = my_args.get_args(description)
 
-method = args.method
 
-sys.path.insert(0, "C:\RC Dropbox\Rivers Cuomo\Apps")
 logging.basicConfig(level=logging.INFO)
 
 pages = [
@@ -60,6 +58,7 @@ def open_last_fm_page(driver, page):
     driver.get(page)
     print("opened last.fm")
 
+
 def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
     # data = [] # if you want to wipe out the sheet and start over
 
@@ -69,33 +68,26 @@ def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
 
     # driver.get(search_link)
 
-    for b in range(int(fromsongs), int(tosongs) + 1):
+    for i in range(int(fromsongs), int(tosongs) + 1):
 
-        print(f"{b}", end=": ")
-        b = str(b)
+        print(f"{i}", end=": ")
+        i = str(i)
 
-        table_rowx = f'//*[@id="mantle_skin"]/div[3]/div[2]/div[1]/section[1]/div[2]/table/tbody/tr[{b}]'
+        table_rowx = f'//*[@id="mantle_skin"]/div[3]/div[2]/div[1]/section[1]/div[2]/table/tbody/tr[{i}]'
 
-        # THIS was timing out so I'm wrapping it in try
-        try:
-            WebDriverWait(driver, 240).until(
-                EC.presence_of_element_located((By.XPATH, table_rowx))
-            )
-        except Exception:
-            print("can't wait for page to load")
-            continue
+        core.wait_for_element(driver, table_rowx)
 
         elem = driver.find_element(by=By.XPATH, value=table_rowx)
         text = elem.text # '1 Play track\nLove this track\nBuddy Holly\n1,380,948 listeners'
         elems = text.split("\n") # ['1 Play track', 'Love this track', 'Buddy Holly', '1,380,948 listeners']
         if len(elems) < 4:
-            print(f"skipping {b} because it's not a song")
+            print(f"skipping {i} because it's not a song")
             print(text)
             print(elems)
             continue
         title = str(elems[2])
         print(title)
-        listeners = elems[3].split(" ")[0]
+        listeners = elems[3].split(" ")[0].replace(",", "")
 
         if row := next(
             (x for x in data if core.sanitize(str(x["song_title"])) == core.sanitize(title)),
@@ -104,32 +96,45 @@ def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
             row[data_date_range]=listeners
         else:
             print(f"couldn't find {title} in sheet")
+            # if "All My Favorite Songs (feat. AJR)"==title:
+            data.append({"song_title": title, data_date_range: listeners})
 
     return data
 
-# def update_lastfm(driver, data):
-#     """UPDATE THE LASTFM COLUMN IN THE """
-#     print("\nupdate_lastfm...")
 
-    
-    
-#     return scrape_page(driver, d)
+def consolidate_alt_versions_special(data):
+    """
+    "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
+    """
+    print("consolidate_alt_versions_special...")
 
-    
+    ajr_index = data.index([x for x in data if "feat. AJR" in str(x["song_title"])][0])
+    ajr = data.pop(ajr_index)
+    all_my_fav = [x for x in data if "All My Favorite Songs" in str(x["song_title"])][0]
+
+    if "saves_last_28_days" in ajr:
+        all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
+
+    if "streams_last_28_days" in ajr:
+        all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
+
+    if "streams_since_2015" in ajr:
+        all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
+
+    if "lastfm_all" in ajr:
+        all_my_fav["lastfm_all"] = str(int(all_my_fav["lastfm_all"]) + int(ajr["lastfm_all"]))
+
+    if "lastfm_365_days" in ajr:
+        all_my_fav["lastfm_365_days"] = str(int(all_my_fav["lastfm_365_days"]) + int(ajr["lastfm_365_days"]))
+
+    if "lastfm_30_days" in ajr:
+        all_my_fav["lastfm_30_days"] = str(int(all_my_fav["lastfm_30_days"]) + int(ajr["lastfm_30_days"]))
+
+    return data
+
+
 
 def main():
-
-    
-
-    # sheet = get_sheet("Weezer Data", "all")
-
-    # data = sheet.get_all_records()
-    # # Python >= 3.5 alternative: unpack dictionary keys into a list literal [*newdict]
-    # # arbitrarily using the first data row to get the keys
-    # headers = [*data[0]]
-    
-
-    # countries_of_interest = [x for x in core.countries_of_interest if x in headers]
 
     driver = core.get_driver()
 
@@ -142,18 +147,8 @@ def main():
         open_last_fm_page(driver, page)
 
         data = scrape_page(driver, data, data_range)
-        # update_lastfm(driver)
 
-        # if method in ["all", "albums"]:
-        #     update_albums(driver)
-
-        # if method in ["all", "lastfm"]:
-        #     update_lastfm(driver)
-
-        # if method in ["all", "time", "timeall", "time28", "time5"]:
-        #     update_time_filtered_columns(driver)
-
-        # # update_country_columns(driver, limit)
+    data = consolidate_alt_versions_special(data)
 
     update_range(sheet, data)
 

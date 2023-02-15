@@ -29,6 +29,28 @@ def consolidate_album_data(sheet_data, new_data):
     return sheet_data
 
 
+def consolidate_alt_versions_special(data):
+    """
+    "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
+    """
+    print("consolidate_alt_versions_special...")
+
+    ajr_index = data.index([x for x in data if "feat. AJR" in x["song_title"]][0])
+    ajr = data.pop(ajr_index)
+    all_my_fav = [x for x in data if "All My Favorite Songs" in x["song_title"]][0]
+
+    if "saves_last_28_days" in ajr:
+        all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
+
+    if "streams_last_28_days" in ajr:
+        all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
+
+    if "streams_since_2015" in ajr:
+        all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
+
+    return data
+
+
 def consolidate_alt_versions(data, new_data, col_header):
     """
     For example "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
@@ -393,16 +415,16 @@ def scrape_time_filter(
     data = []
 
     print(f"from {fromsongs} to {args.limit}")
-    search_link = f"{spotify_time_filter_url}={time_filter}"
+    search_link = f"{spotify_time_filter_url}{time_filter}"
 
     driver.get(search_link)
 
-    for b in range(int(fromsongs), int(args.limit) + 1):
+    for i in range(int(fromsongs), int(args.limit) + 1):
 
         
-        b = str(b)
+        i = str(i)
         # table_rowx = "/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/table"
-        table_rowx = f"/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{b}]"
+        table_rowx = f"/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{i}]"
 
         # THIS was timing out so I'm wrapping it in try
         core.wait_for_element(driver, table_rowx, timeout=40)
@@ -419,15 +441,15 @@ def scrape_time_filter(
         
         if time_filter == 'last28days':
             column = "streams_last_28_days"
-            row["saves_last_28_days"] = subelems[4]
+            row["saves_last_28_days"] = subelems[4].replace(",", "")
         elif time_filter == "all":
             column = "streams"
         elif time_filter == "last5years":
             column = "streams_since_2015"
-        row[column] = streams
+        row[column] = streams.replace(",", "")
         
 
-        print(f"b: {b} {row}")
+        print(f"{i}: {row}")
         # print(")
 
         # for x in allData:
@@ -440,6 +462,8 @@ def scrape_time_filter(
         elem.click
 
         continue
+
+    # data = consolidate_alt_versions(data)
     return data
 
 
@@ -467,9 +491,11 @@ def fetch_new_datas(driver):
     #     datas.append(all_time_data)        
     if args.method in ["all", "time", "time5"]:
         since_2015_data = scrape_time_filter(driver, "last5years")
+        consolidate_alt_versions_special(since_2015_data)
         datas.append(since_2015_data)        
     if args.method in ["all", "time", "time28"]:
         last_28_days_data = scrape_time_filter(driver, "last28days", fromsongs=1)
+        consolidate_alt_versions_special(last_28_days_data)
         datas.append(last_28_days_data)
     return datas
             
