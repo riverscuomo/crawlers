@@ -29,26 +29,26 @@ def consolidate_album_data(sheet_data, new_data):
     return sheet_data
 
 
-def consolidate_alt_versions_special(data):
-    """
-    "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
-    """
-    print("consolidate_alt_versions_special...")
+# def consolidate_alt_versions_special(data):
+#     """
+#     "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
+#     """
+#     print("consolidate_alt_versions_special...")
 
-    ajr_index = data.index([x for x in data if "feat. AJR" in x["song_title"]][0])
-    ajr = data.pop(ajr_index)
-    all_my_fav = [x for x in data if "All My Favorite Songs" in x["song_title"]][0]
+#     ajr_index = data.index([x for x in data if "feat. AJR" in x["song_title"]][0])
+#     ajr = data.pop(ajr_index)
+#     all_my_fav = [x for x in data if "All My Favorite Songs" in x["song_title"]][0]
 
-    if "saves_last_28_days" in ajr:
-        all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
+#     if "saves_last_28_days" in ajr:
+#         all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
 
-    if "streams_last_28_days" in ajr:
-        all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
+#     if "streams_last_28_days" in ajr:
+#         all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
 
-    if "streams_since_2015" in ajr:
-        all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
+#     if "streams_since_2015" in ajr:
+#         all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
 
-    return data
+#     return data
 
 
 def consolidate_alt_versions(data, new_data, col_header):
@@ -491,11 +491,11 @@ def fetch_new_datas(driver):
     #     datas.append(all_time_data)        
     if args.method in ["all", "time", "time5"]:
         since_2015_data = scrape_time_filter(driver, "last5years")
-        consolidate_alt_versions_special(since_2015_data)
+        core.consolidate_alt_versions_special(since_2015_data)
         datas.append(since_2015_data)        
     if args.method in ["all", "time", "time28"]:
         last_28_days_data = scrape_time_filter(driver, "last28days", fromsongs=1)
-        consolidate_alt_versions_special(last_28_days_data)
+        core.consolidate_alt_versions_special(last_28_days_data)
         datas.append(last_28_days_data)
     return datas
             

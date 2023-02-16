@@ -7,6 +7,36 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+def consolidate_alt_versions_special(data):
+    """
+    "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
+    """
+    print("consolidate_alt_versions_special...")
+
+    ajr_index = data.index([x for x in data if "feat. AJR" in str(x["song_title"])][0])
+    ajr = data.pop(ajr_index)
+    all_my_fav = [x for x in data if "All My Favorite Songs" in str(x["song_title"])][0]
+
+    if "saves_last_28_days" in ajr:
+        all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
+
+    if "streams_last_28_days" in ajr:
+        all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
+
+    if "streams_since_2015" in ajr:
+        all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
+
+    if "lastfm_all" in ajr:
+        all_my_fav["lastfm_all"] = str(int(all_my_fav["lastfm_all"]) + int(ajr["lastfm_all"]))
+
+    if "lastfm_365_days" in ajr:
+        all_my_fav["lastfm_365_days"] = str(int(all_my_fav["lastfm_365_days"]) + int(ajr["lastfm_365_days"]))
+
+    if "lastfm_30_days" in ajr:
+        all_my_fav["lastfm_30_days"] = str(int(all_my_fav["lastfm_30_days"]) + int(ajr["lastfm_30_days"]))
+
+    return data
+
 def log(item: dict):
     print(f" - {item['name']} {item['xpath']}")
 
