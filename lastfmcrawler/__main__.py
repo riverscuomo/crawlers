@@ -1,7 +1,7 @@
 import sys
 import logging
 
-from gspreader.gspreader import get_sheet, update_range
+import gspreader.gspreader as gspreader
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -90,7 +90,7 @@ def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
         listeners = elems[3].split(" ")[0].replace(",", "")
 
         if row := next(
-            (x for x in data if core.sanitize(str(x["song_title"])) == core.sanitize(title)),
+            (x for x in data if gspreader.sanitize_key(str(x["song_title"])) == gspreader.sanitize_key(title)),
             None,
         ):
             row[data_date_range]=listeners
@@ -138,7 +138,7 @@ def main():
 
     driver = core.get_driver()
 
-    sheet = get_sheet("Weezer Data", "all")
+    sheet = gspreader.get_sheet("Weezer Data", "all")
     data = sheet.get_all_records()
     
 
@@ -148,9 +148,9 @@ def main():
 
         data = scrape_page(driver, data, data_range)
 
-    data = consolidate_alt_versions_special(data)
+    data = core.consolidate_alt_versions_special(data)
 
-    update_range(sheet, data)
+    gspreader.update_range(sheet, data)
 
     driver.close()
 

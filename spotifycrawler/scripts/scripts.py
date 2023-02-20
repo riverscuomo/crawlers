@@ -9,6 +9,7 @@ import os
 from core import __main__ as core
 import core.classes.classes as classes
 from core.scripts.my_args import args
+import gspreader.gspreader as gspreader
 
 
 spotify_artist_id = os.getenv("SPOTIFY_ARTIST_ID")
@@ -472,7 +473,7 @@ def custom_update(sheet_data: list, new_data: list, matching_field: str):
     print(f"custom_update on {matching_field}")
     for row in sheet_data:
         for new_row in new_data:
-            if core.sanitize(str(row[matching_field])) == core.sanitize(str(new_row[matching_field])):
+            if gspreader.sanitize_key(str(row[matching_field])) == gspreader.sanitize_key(str(new_row[matching_field])):
 
                 keys = list(new_row.keys())
                 keys = [x for x in keys if x != matching_field]
@@ -500,11 +501,11 @@ def fetch_new_datas(driver):
     return datas
             
 
-        # data = core.update_sheet_data(data, all_time_data, "song_title")
+        # data = gspreader.update_sheet_data_by_matching_key(data, all_time_data, "song_title")
         # data = consolidate_alt_versions(data, all_time_data, "streams")
-        # data = core.update_sheet_data(data, since_2015_data,"song_title")
+        # data = gspreader.update_sheet_data_by_matching_key(data, since_2015_data,"song_title")
         # data = consolidate_alt_versions(data, since_2015_data, "streams_since_2015")
-        # data = core.update_sheet_data(data, last_28_days_data, "song_title")
+        # data = gspreader.update_sheet_data_by_matching_key(data, last_28_days_data, "song_title")
         # data = consolidate_alt_versions(data, last_28_days_data, "streams_last_28_days")
     # for sheet in sheets:
     #     print(f"updating {sheet.title}...")

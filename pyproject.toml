@@ -17,7 +17,7 @@ rivertils = ">=0.1.8"
 rich = ">=12.6.0"
 selenium = ">=4.8.0"
 gspread = ">=5.7.2"
-gspreader = ">=0.1.21"
+gspreader = ">=0.1.23"
 
 
 [build-system]

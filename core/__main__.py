@@ -55,24 +55,25 @@ def get_driver():
     return driver
 
 
-def sanitize(s: str):
-    s = s.lower()
-    bads = ["'", '"', "(", ")", ":", ";", "!", "?", "’", "“", "”", "‘", "–", "—", "…", ",", ".", " ", "-"]
-    for b in bads:
-        s = s.replace(b, "")
-    return s
+# def sanitize(s: str):
+#     s = s.lower()
+#     bads = ["'", '"', "(", ")", ":", ";", "!", "?", "’", "“", "”", "‘", "–", "—", "…", ",", ".", " ", "-"]
+#     for b in bads:
+#         s = s.replace(b, "")
+#     return s
 
 
-def update_sheet_data(sheet_data: list, new_data: list, key: str):
-    """ update the sheet_data with the new_data (if there's a matching row in the new data)"""
-    print("update_sheet_data...")
-    for row in sheet_data:
-        for new_row in new_data:
-            if sanitize(str(row[key])) == sanitize(str(new_row[key])):
+# def update_sheet_data(sheet_data: list, new_data: list, key: str):
+#     """ update the sheet_data with the new_data (if there's a matching row in the new data)"""
+#     print("update_sheet_data...")
+#     for row in sheet_data:
+#         for new_row in new_data:
+#             if sanitize(str(row[key])) == sanitize(str(new_row[key])):
+#                 # print(f"Updating {row[key]}")
 
-                # Update the columns for this song in this new_row
-                row.update(new_row)
-    return sheet_data
+#                 # Update the columns for this song in this new_row
+#                 row.update(new_row)
+#     return sheet_data
 
 
 def wait_and_click(driver, item, timeout=20):
