@@ -35,7 +35,6 @@ def update_country_columns(driver):
 
     countries_of_interest = [x for x in core.countries_of_interest if x in headers]
 
-    # data = sheet.get_all_records()
     country_data = scripts.scrape_country_data(driver, countries_of_interest, tosongs=args.limit)
 
     data = gspreader.update_sheet_data_by_matching_key(data, country_data, "song_title")

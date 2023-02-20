@@ -1,7 +1,10 @@
 import logging
 import sys
 from rich import print
-import os
+
+# HAS TO BE ABOVE the other import args or this will not run from maintenance.py cmd line
+if "maintenance.py" in sys.argv:
+    sys.argv=['spotifyCrawler.py']
 
 import core.__main__ as core
 from spotifycrawler.scripts import scripts
@@ -12,8 +15,7 @@ print("\nspotifycrawler.py")
 
 
 
-if "maintenance.py" in sys.argv:
-    sys.argv=['spotifyCrawler.py']
+
 
 # sys.path.insert(0, "C:\RC Dropbox\Rivers Cuomo\Apps")
 logging.basicConfig(level=logging.INFO)

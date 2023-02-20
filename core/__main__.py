@@ -83,6 +83,7 @@ def wait_and_click(driver, item, timeout=20):
     ).click()
 
 def wait_for_element(driver, value, by=By.XPATH, timeout=20):
+    # print(value, by, timeout)
     # THIS was timing out so I'm wrapping it in try
     try:
         WebDriverWait(driver, timeout).until(

@@ -368,18 +368,21 @@ def scrape_country_data(driver, countries_of_interest, fromsongs=1, tosongs=75, 
 
     print("scrape_country_data...")
     print(f"from song {fromsongs} to {tosongs}")
-    search_link = "https://artists.spotify.com/c/artist/3jOstUTkEu2JkjvRdBA5Gu/catalog/released/songs"
+    search_link = "https://artists.spotify.com/c/artist/3jOstUTkEu2JkjvRdBA5Gu/music/songs"
+    
 
     country_data = []
 
     for b in range(int(fromsongs), int(tosongs) + 1):
 
+        # YOU NEED TO RELOAD THE PAGE EVERY TIME to CLICK ON A NEW SONG
         driver.get(search_link)
 
         print(f" - {b}: ", end="")
         b = str(b)
         # table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]'
-        table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]/td[2]/div'
+        # table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]/td[2]/div'
+        table_row_for_this_songx = f'//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table/tbody/tr[{b}]/td[2]/div/div/span'
 
         core.wait_for_element(driver, table_row_for_this_songx)
         elem = driver.find_element(by=By.XPATH, value=table_row_for_this_songx)
@@ -389,12 +392,13 @@ def scrape_country_data(driver, countries_of_interest, fromsongs=1, tosongs=75, 
 
         # location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/div/div[2]/ul/li[3]/a'
         location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/ul/li[3]/a'
-        core.wait_for_element(driver, By.XPATH, location_buttonx)
+        # location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/ul/li[3]/a'
+        core.wait_for_element(driver,location_buttonx )
         elem = driver.find_element(by=By.XPATH, value=location_buttonx)
         elem.click()
 
         country_tablex = '//*[@id="where-they-listen"]/div[2]/div/div/table/tbody'
-        core.wait_for_element(driver, country_tablex)
+        core.wait_for_element(driver, country_tablex )
         elem = driver.find_element(by=By.XPATH, value=country_tablex)
 
         row = parse_country_string(elem.text, countries_of_interest)

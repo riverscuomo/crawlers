@@ -1,23 +1,17 @@
 import sys
+
 import logging
-
 import gspreader.gspreader as gspreader
-
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-# import datetime
-# import os
-# import time
 from rich import print
 from rivertils import *
 import core.__main__ as core
-import core.scripts.my_args as my_args 
 from dotenv import load_dotenv
 load_dotenv()
 
 print("\nlastfmcrawler.py")
-
+if "maintenance.py" in sys.argv:
+    sys.argv=['lastfmcrawler.py']
 # sheet = get_sheet("")
 description = """
     1. currently only updates the 'all' sheet in the 'Weezer Data' spreadsheet  
@@ -25,9 +19,8 @@ description = """
 
     Currently matches with song_title in the sheet
     """
+print(sys.argv)
 
-if "maintenance.py" in sys.argv:
-    sys.argv=['lastfmcrawler.py']
 
 # args = my_args.get_args(description)
 
