@@ -14,37 +14,49 @@ if "maintenance.py" in sys.argv:
     sys.argv=['lastfmcrawler.py']
 # sheet = get_sheet("")
 description = """
-    1. currently only updates the 'all' sheet in the 'Weezer Data' spreadsheet  
+    1.  updates the 'all' sheet in the 'Weezer Data' spreadsheet and the data sheet in Setlist spreadsheet
     with latest data from lastfm./weezer
 
     Currently matches with song_title in the sheet
+
     """
 print(sys.argv)
 
 
-# args = my_args.get_args(description)
-
-
 logging.basicConfig(level=logging.INFO)
 
-pages = [
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=ALL",
-#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_7_DAYS",
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_30_DAYS",
-#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_90_DAYS",
-#     "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_180_DAYS",
-    "https://www.last.fm/music/Weezer/+tracks?date_preset=LAST_365_DAYS",
+class LastFmRequest:
+    def __init__(self, url, date_preset, sheet_header):
+        self.url = url
+        self.date_preset = date_preset
+        self.sheet_header = sheet_header
+    
+    def __repr__(self):
+        return f"{self.url} {self.date_preset} {self.sheet_header}"
 
-]
 
-ranges = [
-    "lastfm_all",	
-    # "lastfm_7_days"	,
-    "lastfm_30_days"	,
-    # "lastfm_90_days"	,
-    # "lastfm_180_days",	
-    "lastfm_365_days",
-]
+def build_requests():
+    base_url = "https://www.last.fm/music/Weezer/+tracks?"
+    date_presets = [
+       {"date_preset": "ALL", "sheet_header":"lastfm_all"},        
+        {"date_preset":"LAST_30_DAYS", "sheet_header":"lastfm_30_days"},       
+        {"date_preset":"LAST_365_DAYS", "sheet_header":"lastfm_365_days"}
+         # "LAST_7_DAYS",
+        # "LAST_90_DAYS",
+        # "LAST_180_DAYS",
+    ]
+
+    requests = []
+    for date_preset in date_presets:
+        for i in range(1, 11):
+            date= date_preset["date_preset"]
+            requests.append(LastFmRequest(url=f"{base_url}date_preset={date}&page={i}", date_preset=date, sheet_header=date_preset["sheet_header"]))
+        # requests.extend(
+        #     f"{base_url}date_preset={date_preset}&page={i}"
+            
+        # )
+    return requests
+
 
 def open_last_fm_page(driver, page):
     print(f"\nopen_last_fm_page: {page}")
@@ -52,7 +64,7 @@ def open_last_fm_page(driver, page):
     print("opened last.fm")
 
 
-def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
+def scrape_page(driver, request: LastFmRequest, data, fromsongs=1, tosongs=53):
     # data = [] # if you want to wipe out the sheet and start over
 
     print(f"scrape_page from {fromsongs} to {tosongs}")
@@ -81,49 +93,20 @@ def scrape_page(driver, data, data_date_range, fromsongs=1, tosongs=53):
         title = str(elems[2])
         print(title)
         listeners = elems[3].split(" ")[0].replace(",", "")
+        data.append({"song_title": title, request.sheet_header: listeners})
 
-        if row := next(
-            (x for x in data if gspreader.sanitize_key(str(x["song_title"])) == gspreader.sanitize_key(title)),
-            None,
-        ):
-            row[data_date_range]=listeners
-        else:
-            print(f"couldn't find {title} in sheet")
-            # if "All My Favorite Songs (feat. AJR)"==title:
-            data.append({"song_title": title, data_date_range: listeners})
+        # if row := next(
+        #     (x for x in data if gspreader.sanitize_key(str(x["song_title"])) == gspreader.sanitize_key(title)),
+        #     None,
+        # ):
+        #     row[data_date_range]=listeners
+        # else:
+        #     print(f"couldn't find {title} in sheet")
+        #     # if "All My Favorite Songs (feat. AJR)"==title:
+        #     data.append({"song_title": title, data_date_range: listeners})
 
     return data
 
-
-# def consolidate_alt_versions_special(data):
-#     """
-#     "All My Favorite Songs" and "All My Favorite Songs feat. AJR"
-#     """
-#     print("consolidate_alt_versions_special...")
-
-#     ajr_index = data.index([x for x in data if "feat. AJR" in str(x["song_title"])][0])
-#     ajr = data.pop(ajr_index)
-#     all_my_fav = [x for x in data if "All My Favorite Songs" in str(x["song_title"])][0]
-
-#     if "saves_last_28_days" in ajr:
-#         all_my_fav["saves_last_28_days"] = str(int(all_my_fav["saves_last_28_days"]) + int(ajr["saves_last_28_days"]))
-
-#     if "streams_last_28_days" in ajr:
-#         all_my_fav["streams_last_28_days"] = str(int(all_my_fav["streams_last_28_days"]) + int(ajr["streams_last_28_days"]))
-
-#     if "streams_since_2015" in ajr:
-#         all_my_fav["streams_since_2015"] = str(int(all_my_fav["streams_since_2015"]) + int(ajr["streams_since_2015"]))
-
-#     if "lastfm_all" in ajr:
-#         all_my_fav["lastfm_all"] = str(int(all_my_fav["lastfm_all"]) + int(ajr["lastfm_all"]))
-
-#     if "lastfm_365_days" in ajr:
-#         all_my_fav["lastfm_365_days"] = str(int(all_my_fav["lastfm_365_days"]) + int(ajr["lastfm_365_days"]))
-
-#     if "lastfm_30_days" in ajr:
-#         all_my_fav["lastfm_30_days"] = str(int(all_my_fav["lastfm_30_days"]) + int(ajr["lastfm_30_days"]))
-
-#     return data
 
 
 
@@ -131,23 +114,36 @@ def main():
 
     driver = core.get_driver()
 
-    sheet = gspreader.get_sheet("Weezer Data", "all")
-    data = sheet.get_all_records()
+    new_data = []
+
+    requests = build_requests()
+
+    for request in requests:
+
+        open_last_fm_page(driver, request.url)
+
+        new_data = scrape_page(driver, request, new_data)
+
+    new_data = core.consolidate_alt_versions_special(new_data)
     
+    driver.close()    
+    
+    """ Update the 2 sheets with the new data """
+    sheets = [
+        ("Weezer Data", "all"), 
+        ("Setlist", "data")
+    ]
 
-    for page, data_range in zip(pages, ranges):
-
-        open_last_fm_page(driver, page)
-
-        data = scrape_page(driver, data, data_range)
-
-    data = core.consolidate_alt_versions_special(data)
-
-    gspreader.update_range(sheet, data)
-
-    driver.close()
+    for sheet_tuple in sheets:
+    
+        sheet = gspreader.get_sheet(sheet_tuple[0], sheet_tuple[1])
+        sheet_data = sheet.get_all_records()
+        data = gspreader.update_sheet_data_by_matching_key(sheet_data, new_data, "song_title")
+        gspreader.update_range(sheet, data)
 
     return "Success!"
+
+
 
 
 if __name__ == "__main__":

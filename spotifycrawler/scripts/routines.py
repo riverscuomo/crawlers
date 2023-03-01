@@ -60,10 +60,10 @@ def update_time_filtered_columns(driver):
 
     # get all the old sheet data
     sheets = []
-    if args.target_sheet in ["all", "weezer_data"]:
+    if args.sheet in ["all", "weezer_data"]:
         sheets.append(gspreader.get_sheet("Weezer Data", "all"))
-    if args.target_sheet in ["all", "setlist"]:
-        sheets.append(gspreader.get_sheet("Setlist", 0))    
+    if args.sheet in ["all", "setlist"]:
+        sheets.append(gspreader.get_sheet("Setlist", "data"))    
 
     for sheet in sheets:
         print(sheet.title)

@@ -13,10 +13,6 @@ from core.scripts.my_args import args
 
 print("\nspotifycrawler.py")
 
-
-
-
-
 # sys.path.insert(0, "C:\RC Dropbox\Rivers Cuomo\Apps")
 logging.basicConfig(level=logging.INFO)
 

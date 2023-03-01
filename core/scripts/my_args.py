@@ -32,12 +32,12 @@ def get_args(description):
     "-m", "--method", help="the method you want to run", required=False, default="all", choices=["all", "albums", "spotify", "time", "timeall", "time28", "time5", "country"]
     )
     parser.add_argument(
-    "-t", "--target_sheet", help="the sheet you're updating", required=False, default="all", choices=["all", "weezer_data", "setlist"]
+    "-s", "--sheet", help="the sheet you're updating", required=False, default="all", choices=["all", "weezer_data", "setlist"]
     )
     return parser.parse_args()
 
 args = get_args(description)
 
 method = args.method
-target_sheet = args.target_sheet
+sheet = args.sheet
 limit = args.limit

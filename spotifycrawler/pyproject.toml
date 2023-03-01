@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "spotifycrawler"
+version = "0.1.0"
+description = "Scrapes all kinds of weezer data from artists.spotify and prints to Setlist and Weezer Data sheets"
+authors = ["Rivers <{ID}+{username}@users.noreply.github.com>"]
+license = "GNL"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+rich = ">=13.3.1"
+gspreader = ">=0.1.23"
+selenium = ">=4.8.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
