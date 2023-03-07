@@ -117,7 +117,7 @@ def consolidate_alt_versions_for_each_country(data, countries_of_interest):
     return data
 
 
-def log_into_spotify_site(driver):
+def log_into_spotify_site(driver):  # sourcery skip: avoid-builtin-shadow
     username = os.environ.get("SPOTIFY_EMAIL")
     password = os.environ.get("SPOTIFY_PASSWORD")
     driver.get("https://accounts.spotify.com/en/login")
@@ -130,9 +130,9 @@ def log_into_spotify_site(driver):
     pw = driver.find_element(by=By.XPATH, value="//input[@type = 'password']")
     pw.send_keys(password)
 
-    login_button_xpath = r'//*[@id="login-button"]/div[1]'
-
-    driver.find_element(by=By.XPATH, value=login_button_xpath).click()
+    # login_button_xpath = r'//*[@id="login-button"]/div[1]'
+    # lb_xpath = r'//*[@id="login-button"]/span[1]/span'
+    driver.find_element(by=By.ID, value="login-button").click()
 
     time.sleep(1)  # rc
 
@@ -517,4 +517,10 @@ def fetch_new_datas(driver):
         # # get the old sheet data again
         # sheet_data = sheet.get_all_records()
         # data = update_sheet_data(sheet_data, data)
-       
+
+def main():
+    driver = core.get_driver()
+    log_into_spotify_site(driver)
+
+if __name__ == "__main__":
+    main()
