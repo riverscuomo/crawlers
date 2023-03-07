@@ -48,9 +48,7 @@ poetry install
 
 
 ## Running
-
-Once you have completed all the installation steps, cd to one of the crawler directories and run by running `py -m lastfmcrawler`, for example.
-Or `poetry run py -m lastfmcrawler` if you are using poetry.
+I WAS ABLE TO RUN LASTFMCRAWLER FROM CRAWLERS/ with `py crawler`! same with spotifycrawler! and wme.
 
 
 ## Contributing

@@ -18,6 +18,7 @@ rich = ">=12.6.0"
 selenium = ">=4.8.0"
 gspread = ">=5.7.2"
 gspreader = ">=0.1.23"
+python-dotenv= ">=0.21.0"
 
 
 [build-system]
