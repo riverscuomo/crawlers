@@ -89,7 +89,8 @@ def wait_for_element(driver, value, by=By.XPATH, timeout=20):
         WebDriverWait(driver, timeout).until(
             EC.presence_of_element_located((by, value))
         )
-    except Exception:
+    except Exception as e:
+        print(e)
         print(f"Waited for {timeout} but couldn't find '{value }' by {by} in page")
 
 

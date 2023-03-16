@@ -159,14 +159,11 @@ def scrape_albums(
 
     table = "/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/table"
     # table = '//*[@id="s4a-page-main-content"]/div/div[2]/section[2]/div/table'
+    table = '/*[@id="s4a-page-main-content"]/div/div[2]/table'
+    table = '/html/body/div[2]/div/div/div/div[2]/div[2]/div/div/div/div/main/div/div/div/div[2]/table'
+    table = '/html/body/div[2]/div/div/div/div[2]/div[2]/div/div/div/div/main/div/div/div/div[2]/table'
 
-    # THIS was timing out so I'm wrapping it in try
-    try:
-        WebDriverWait(driver, 240).until(
-            EC.presence_of_element_located((By.XPATH, table))
-        )
-    except Exception:
-        print("can't wait for page to load")
+    core.wait_for_element(driver, table)
 
     elem = driver.find_element(by=By.XPATH, value=table)
     text = elem.text
@@ -429,7 +426,8 @@ def scrape_time_filter(
         
         i = str(i)
         # table_rowx = "/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/table"
-        table_rowx = f"/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{i}]"
+        # table_rowx = f"/html/body/div[2]/div/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{i}]"
+        table_rowx = f"/html/body/div[2]/div/div/div/div[2]/div[2]/div/div/div/div/main/div/div/div/div[2]/section[2]/div/table/tbody/tr[{i}]"
 
         # THIS was timing out so I'm wrapping it in try
         core.wait_for_element(driver, table_rowx, timeout=40)
@@ -488,6 +486,7 @@ def custom_update(sheet_data: list, new_data: list, matching_field: str):
 
 
 def fetch_new_datas(driver):
+    print("fetch_new_datas()")
     datas = []
 
     # # get all the new spotify data
