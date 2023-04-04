@@ -8,6 +8,7 @@ packages = [
     { include = "lastfmcrawler"},
     { include = "spotifycrawler" },
     { include = "wme" },
+    { include = "youtubetakedown" },
     { include = "core" },
 ]
 
@@ -19,6 +20,7 @@ selenium = ">=4.8.0"
 gspread = ">=5.7.2"
 gspreader = ">=0.1.23"
 python-dotenv= ">=0.21.0"
+undetected_chromedriver=">=3.4.6"
 
 
 [build-system]

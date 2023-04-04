@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -55,6 +56,58 @@ def get_driver():
     return driver
 
 
+def send_keys_and_click(driver, text, id, by=By.XPATH):
+    print(f'send_keys {text} and_click {id} by {by}', end=" ")
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((by, id))
+        )
+    keyword = driver.find_element(by=by, value=id)
+    keyword.send_keys(text)
+    keyword.send_keys(Keys.ENTER)
+    print("done")
+
+
+def wait_and_click(driver, item, timeout=20, by=By.XPATH):
+    print('wait_and_click', item)
+    WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located((by, item["xpath"]))
+    ).click()
+
+
+def click(driver, id, timeout=20, by=By.XPATH):
+    # print('wait_and_click', id)
+    print(f"click {id} by {by}...", end=" ")
+    WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located((by, id))
+    ).click()
+    print("done")
+
+# def click_id(driver, id, timeout=20, by=By.XPATH):
+#     print('wait_and_click', id)
+#     WebDriverWait(driver, timeout).until(
+#         EC.presence_of_element_located((By.id, id))
+#     ).click()
+
+def wait_and_send_keys(driver, text, id, by=By.XPATH):
+    print('wait_and_send_keys', text, id)
+    WebDriverWait(driver, 20).until(
+        EC.presence_of_element_located((by, id))
+        )
+    keyword = driver.find_element(by=by, value=id)
+    keyword.send_keys(text)
+
+def wait_for_element(driver, id, by=By.XPATH, timeout=20):
+    # print(value, by, timeout)
+    # THIS was timing out so I'm wrapping it in try
+    try:
+        WebDriverWait(driver, timeout).until(
+            EC.presence_of_element_located((by, id))
+        )
+    except Exception as e:
+        print(e)
+        print(f"Waited for {timeout} but couldn't find '{id }' by {by} in page")
+
+
 # def sanitize(s: str):
 #     s = s.lower()
 #     bads = ["'", '"', "(", ")", ":", ";", "!", "?", "’", "“", "”", "‘", "–", "—", "…", ",", ".", " ", "-"]
@@ -74,25 +127,6 @@ def get_driver():
 #                 # Update the columns for this song in this new_row
 #                 row.update(new_row)
 #     return sheet_data
-
-
-def wait_and_click(driver, item, timeout=20):
-    log(item)
-    WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((By.XPATH, item["xpath"]))
-    ).click()
-
-def wait_for_element(driver, value, by=By.XPATH, timeout=20):
-    # print(value, by, timeout)
-    # THIS was timing out so I'm wrapping it in try
-    try:
-        WebDriverWait(driver, timeout).until(
-            EC.presence_of_element_located((by, value))
-        )
-    except Exception as e:
-        print(e)
-        print(f"Waited for {timeout} but couldn't find '{value }' by {by} in page")
-
 
 countries_of_interest = [
     "United States",
