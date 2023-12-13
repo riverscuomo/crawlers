@@ -6,6 +6,7 @@ from selenium.webdriver.common.by import By
 from rich import print
 from rivertils import *
 import core.__main__ as core
+from maintenance_config import chromedriver_warning
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -113,6 +114,9 @@ def scrape_page(driver, request: LastFmRequest, data, fromsongs=1, tosongs=53):
 def main():
 
     driver = core.get_driver()
+
+    if type(driver) == str:
+        return chromedriver_warning
 
     new_data = []
 

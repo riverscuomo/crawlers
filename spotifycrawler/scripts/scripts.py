@@ -388,7 +388,8 @@ def scrape_country_data(driver, countries_of_interest, fromsongs=1, tosongs=75, 
         elem.click()
 
         # location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/div/div[2]/ul/li[3]/a'
-        location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/ul/li[3]/a'
+        # location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/ul/li[3]/a'
+        location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[2]/div[2]/ul/li[3]/a'
         # location_buttonx = '//*[@id="s4a-page-main-content"]/div/div[2]/div[1]/div[2]/ul/li[3]/a'
         core.wait_for_element(driver,location_buttonx )
         elem = driver.find_element(by=By.XPATH, value=location_buttonx)

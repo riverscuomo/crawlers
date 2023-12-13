@@ -1,12 +1,23 @@
 
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
-import os
+import time
 from dotenv import load_dotenv
 load_dotenv()
+
+def click(driver, id, timeout=20, by=By.XPATH):
+    # print('wait_and_click', id)
+    print(f"click {id} by {by}...", end=" ")
+    WebDriverWait(driver, timeout).until(
+        EC.presence_of_element_located((by, id))
+    ).click()
+    print("done\n")
+
 
 def consolidate_alt_versions_special(data):
     """
@@ -48,39 +59,66 @@ def get_driver():
 
     options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
-    dir_path = os.path.dirname(os.path.realpath(__file__))
-    chromedriver = f"{dir_path}/chromedriver"
-    os.environ["webdriver.chrome.driver"] = chromedriver
-    driver = webdriver.Chrome(options=options)
+    # dir_path = os.path.dirname(os.path.realpath(__file__))
+    # chromedriver = f"{dir_path}/chromedriver"
+    # os.environ["webdriver.chrome.driver"] = chromedriver
+    try:
+        # driver = webdriver.Chrome(options=options)
+        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
+    except Exception as e:
+        print(e.msg)
+        return e.msg
     driver.set_window_size(1368, 786)
     return driver
 
 
 def send_keys_and_click(driver, text, id, by=By.XPATH):
     print(f'send_keys {text} and_click {id} by {by}', end=" ")
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((by, id))
-        )
-    keyword = driver.find_element(by=by, value=id)
-    keyword.send_keys(text)
-    keyword.send_keys(Keys.ENTER)
-    print("done")
+    try:
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((by, id))
+            )
+    
+        keyword = driver.find_element(by=by, value=id)
+        keyword.send_keys(text)
+        keyword.send_keys(Keys.ENTER)
+        print("done\n")
+    except Exception as e:
+        print(e)
+        time.sleep(2)
 
 
 def wait_and_click(driver, item, timeout=20, by=By.XPATH):
     print('wait_and_click', item)
-    WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((by, item["xpath"]))
-    ).click()
+    try:
+        WebDriverWait(driver, timeout).until(
+            EC.element_to_be_clickable((by, item["xpath"]))
+        ).click()
+    except Exception as e:
+        print(e)
+        time.sleep(2)
+
+    
 
 
-def click(driver, id, timeout=20, by=By.XPATH):
-    # print('wait_and_click', id)
-    print(f"click {id} by {by}...", end=" ")
-    WebDriverWait(driver, timeout).until(
-        EC.presence_of_element_located((by, id))
-    ).click()
-    print("done")
+def wait_and_click_v2(driver,  id, timeout=20, by=By.XPATH):
+    print(f'wait_and_click_v2 {id} {timeout}...', end=" ")
+    wait = WebDriverWait(driver, timeout)
+    try:
+        element = wait.until(EC.element_to_be_clickable((by, id)))
+        try:
+            print("clicking", end="...")
+            element.click()
+            print("done\n")
+        except Exception as e:
+            print(e)
+            time.sleep(4)
+    except Exception as e:
+        print(e)
+        time.sleep(4)
+
+
+
 
 # def click_id(driver, id, timeout=20, by=By.XPATH):
 #     print('wait_and_click', id)
@@ -88,13 +126,79 @@ def click(driver, id, timeout=20, by=By.XPATH):
 #         EC.presence_of_element_located((By.id, id))
 #     ).click()
 
-def wait_and_send_keys(driver, text, id, by=By.XPATH):
-    print('wait_and_send_keys', text, id)
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((by, id))
-        )
-    keyword = driver.find_element(by=by, value=id)
-    keyword.send_keys(text)
+
+def wait_and_send_keys(driver, text, id, by=By.XPATH, timeout=20):
+    print(f"wait_and_send_keys: '{text}' id", end=" ")
+    wait = WebDriverWait(driver, timeout)
+    
+    try:
+        element = wait.until(EC.element_to_be_clickable((by, id)))
+        try:
+            print("clicking", end="...")
+            element.click()
+            try:
+                print("sending keys...", end=" ")
+                element.send_keys(text)
+                print("done\n")
+            except Exception as e:
+                print(e)
+                time.sleep(2)
+        except Exception as e:
+            print(e)
+            time.sleep(2)
+    except Exception as e:
+        print(e)
+        time.sleep(2)
+
+def wait_click_and_send_keys(driver, text, id, by=By.XPATH, timeout=20):
+    print(f'wait_click_and_send_keys {text} {id}...', end=" ")
+    wait = WebDriverWait(driver, timeout)
+    
+    try:
+        element = wait.until(EC.element_to_be_clickable((by, id)))
+        try:
+            print("clicking", end="...")
+            element.click()
+            try:
+                print("sending keys", end="...")
+                element.send_keys(text)
+                print("done\n")
+            except Exception as e:
+                print(e)
+                time.sleep(2)
+        except Exception as e:
+            print(e)
+            time.sleep(2)
+    
+    except Exception as e:
+        print(e)
+        time.sleep(2)
+    
+    # WebDriverWait(driver, 20).until(
+    #     EC.presence_of_element_located((by, id))
+    #     )
+    # keyword = driver.find_element(by=by, value=id)
+    # time.sleep(1)
+    # keyword.click()
+    # time.sleep(1)
+    # keyword.click()
+    # time.sleep(10)
+    # keyword.send_keys(text)
+
+    # attempts = 0
+    # max_attempts = 3
+
+    # while attempts < max_attempts:
+    #     try:
+    #         wait = WebDriverWait(driver, timeout)
+    #         element = wait.until(EC.element_to_be_clickable((By.ID, id)))
+    #         element.click()
+    #         element.send_keys(text)
+    #         break
+    #     except StaleElementReferenceException:
+    #         attempts += 1
+    #         if attempts >= max_attempts:
+    #             raise
 
 def wait_for_element(driver, id, by=By.XPATH, timeout=20):
     # print(value, by, timeout)

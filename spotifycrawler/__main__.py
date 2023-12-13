@@ -10,6 +10,7 @@ import core.__main__ as core
 from spotifycrawler.scripts import scripts
 from spotifycrawler.scripts import routines
 from core.scripts.my_args import args
+from maintenance_config import chromedriver_warning
 
 print("\nspotifycrawler.py")
 
@@ -20,6 +21,9 @@ logging.basicConfig(level=logging.INFO)
 def main():    
 
     driver = core.get_driver()
+
+    if type(driver) == str:
+        return chromedriver_warning
 
     scripts.log_into_spotify_site(driver)
 
