@@ -6,9 +6,76 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 import time
 from dotenv import load_dotenv
+import logging
+import os
 load_dotenv()
+
+
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+def get_driver():
+    options = Options()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
+    
+    try:
+        logger.info("Attempting to set up Chrome driver...")
+        
+        # This line downloads and returns the path to the chromedriver binary
+        service_path = ChromeDriverManager().install()
+        
+        # Ensure the chromedriver binary exists and is executable
+        if not os.path.exists(service_path):
+            logger.error(f"Chromedriver not found at path: {service_path}")
+            raise OSError(f"Chromedriver not found at path: {service_path}")
+        
+        logger.info(f"Chromedriver path: {service_path}")
+        
+        service = ChromeService(service_path)
+        driver = webdriver.Chrome(service=service, options=options)
+        
+        logger.info("Chrome driver set up successfully.")
+        return driver
+    except OSError as os_err:
+        logger.error(f"OSError: {os_err.strerror}")
+        raise os_err
+    except Exception as e:
+        logger.error(f"An error occurred while setting up the Chrome driver: {str(e)}")
+        raise
+# def get_driver():
+#     options = Options()
+#     options.add_argument("--no-sandbox")
+#     options.add_argument("--disable-dev-shm-usage")
+    
+#     try:
+#         logger.info("Attempting to set up Chrome driver...")
+#         service = ChromeService(ChromeDriverManager().install())
+#         driver = webdriver.Chrome(service=service, options=options)
+#         logger.info("Chrome driver set up successfully.")
+#         return driver
+#     except Exception as e:
+#         logger.error(f"An error occurred while setting up the Chrome driver: {str(e)}")
+#         raise
+
+
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+
 
 def click(driver, id, timeout=20, by=By.XPATH):
     # print('wait_and_click', id)
@@ -49,27 +116,34 @@ def consolidate_alt_versions_special(data):
 
     return data
 
+# Use the function
+try:
+    driver = get_driver()
+    # Your code using the driver goes here
+finally:
+    if 'driver' in locals():
+        driver.quit()
 def log(item: dict):
     print(f" - {item['name']} {item['xpath']}")
 
-def get_driver():
-    options = webdriver.ChromeOptions()
-    options.add_argument("--ignore-certificate-errors")
-    options.add_argument("--ignore-ssl-errors")
+# def get_driver():
+#     options = webdriver.ChromeOptions()
+#     options.add_argument("--ignore-certificate-errors")
+#     options.add_argument("--ignore-ssl-errors")
 
-    options.add_experimental_option("excludeSwitches", ["enable-logging"])
+#     options.add_experimental_option("excludeSwitches", ["enable-logging"])
 
-    # dir_path = os.path.dirname(os.path.realpath(__file__))
-    # chromedriver = f"{dir_path}/chromedriver"
-    # os.environ["webdriver.chrome.driver"] = chromedriver
-    try:
-        # driver = webdriver.Chrome(options=options)
-        driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager().install()), options=options)
-    except Exception as e:
-        print(e.msg)
-        return e.msg
-    driver.set_window_size(1368, 786)
-    return driver
+#     # dir_path = os.path.dirname(os.path.realpath(__file__))
+#     # chromedriver = f"{dir_path}/chromedriver"
+#     # os.environ["webdriver.chrome.driver"] = chromedriver
+#     try:
+#         # driver = webdriver.Chrome(options=options)
+#         driver = webdriver.Chrome(service=ChromeService(ChromeDriverManager(driver_version="latest").install()), options=options)
+#     except Exception as e:
+#         print(e.msg)
+#         return e.msg
+#     driver.set_window_size(1368, 786)
+#     return driver
 
 
 def send_keys_and_click(driver, text, id, by=By.XPATH):
@@ -99,8 +173,6 @@ def wait_and_click(driver, item, timeout=20, by=By.XPATH):
         time.sleep(2)
 
     
-
-
 def wait_and_click_v2(driver,  id, timeout=20, by=By.XPATH):
     print(f'wait_and_click_v2 {id} {timeout}...', end=" ")
     wait = WebDriverWait(driver, timeout)
@@ -211,6 +283,12 @@ def wait_for_element(driver, id, by=By.XPATH, timeout=20):
         print(e)
         print(f"Waited for {timeout} but couldn't find '{id }' by {by} in page")
 
+
+def main():
+    get_driver()
+
+if __name__ == "__main__":
+    main()
 
 # def sanitize(s: str):
 #     s = s.lower()

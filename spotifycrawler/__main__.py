@@ -10,7 +10,7 @@ import core.__main__ as core
 from spotifycrawler.scripts import scripts
 from spotifycrawler.scripts import routines
 from core.scripts.my_args import args
-from maintenance_config import chromedriver_warning
+from _archive.maintenance_config import chromedriver_warning
 
 print("\nspotifycrawler.py")
 

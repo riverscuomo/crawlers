@@ -6,14 +6,15 @@ I doubt this repo will be of any use to anyone else, but feel free to chime in.
 `spotifycrawler` and `lastmcrawler` draw on common code in `core`.
 They scrape data from spotify and lastfm respectively, and then use `gspread` to import the data into google sheets.
 
-I use these crawlers to populate https://docs.google.com/spreadsheets/d/10kY2Ti0Gn0jfx92uY0vVntZoJdNTywxKuOfriDoywC0/edit#gid=624343020
+I use these crawlers to populate <https://docs.google.com/spreadsheets/d/10kY2Ti0Gn0jfx92uY0vVntZoJdNTywxKuOfriDoywC0/edit#gid=624343020>
 From there I make setlists for Weezer shows.
 
 ## Installation
 
 Depending on which functions you want to run, you will need the following environment variables:
 
-####  spotifycrawler
+### spotifycrawler
+
 You'll need a spotify artists account and the artist_id for that account:
 ![image](https://user-images.githubusercontent.com/24362267/216662746-ba39b0bb-4cdf-48ab-8318-0c8f3424d8c1.png)
 
@@ -23,7 +24,8 @@ SPOTIFY_PASSWORD=(for a spotify artist account)
 SPOTIFY_ARTIST_ID=
 ```
 
-####  LASTFM
+#### LASTFM
+
 ```
 LAST_FM_USER = 
 LAST_FM_API_KEY = 
@@ -31,25 +33,26 @@ LAST_FM_API_SECRET =
 LAST_FM_PASSWORD = 
 ```
 
-####  WME
+#### WME
+
 ```
 WME_USER = 
 WME_PASSWORD = 
 ```
 
-####  GSPREADER For importing and setting data from/to Google Sheets
-```
-GSPREADER_GOOGLE_CLIENT_EMAIL=client_email_from_your_creds.json
-```
+#### GSPREADER For importing and setting data from/to Google Sheets
+
+`GSPREADER_GOOGLE_CLIENT_EMAIL=client_email_from_your_creds.json`
 
 ### Poetry
+
 poetry init
 poetry install
 
-
 ## Running
+
 I WAS ABLE TO RUN LASTFMCRAWLER FROM CRAWLERS/ with `py crawler`! same with spotifycrawler! and wme.
 
-
 ## Contributing
+
 Feel free to make pull requests for any changes you'd like to see.  
